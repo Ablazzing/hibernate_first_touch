@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.hibernate.cfg.Environment;
 import org.javaacademy.hibernate.entity.Passport;
 import org.javaacademy.hibernate.entity.Sex;
+import org.javaacademy.hibernate.entity.WorkBook;
 
 public class Runner {
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class Runner {
 
         @Cleanup SessionFactory sessionFactory = new Configuration().addProperties(properties)
                 .addAnnotatedClass(Employee.class)
+                .addAnnotatedClass(WorkBook.class)
                 .buildSessionFactory();
 
         @Cleanup Session session = sessionFactory.openSession();
@@ -64,7 +66,6 @@ public class Runner {
                                        String position, Sex sex) {
         session.beginTransaction();
         Employee employee = new Employee(name, lastName, BigDecimal.TEN, position, sex);
-        employee.setPassport(new Passport("2020", "400120"));
         session.persist(employee);
         session.getTransaction().commit();
     }

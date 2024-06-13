@@ -8,6 +8,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -16,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -40,8 +46,21 @@ public class Employee {
     @CreationTimestamp
     @Column
     private LocalDate createdDate;
-    @Embedded
-    private Passport passport;
+
+    @OneToOne(mappedBy = "employee")
+    private WorkBook workBook;
+
+    @OneToMany(mappedBy = "father")
+    private List<Child> childList;
+
+    @JoinTable(
+            name = "employee_entry_cabinet",
+            joinColumns = {@JoinColumn(name = "employee_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cabinet_id")}
+
+    )
+    @ManyToMany
+    private List<Cabinet> cabinets;
 
     public Employee(String firstName, String lastName, BigDecimal salary, String position, Sex sex) {
         this.firstName = firstName;
